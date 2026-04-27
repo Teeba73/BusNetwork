@@ -1,0 +1,39 @@
+{% extends "Routes/layout.html" %}
+
+{% block title %} — Sign In{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="auth-wrap">
+
+    <div class="auth-title">Welcome back.</div>
+    <div class="auth-sub">Sign in to manage your bookings.</div>
+
+    {% if message %}
+    <div class="msg msg-error">{{ message }}</div>
+    {% endif %}
+
+    <form method="post" action="{% url 'Users:login' %}">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="your_username" required autocomplete="username">
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required
+          autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn-primary">Sign in</button>
+    </form>
+
+    <div class="auth-switch">
+      No account? <a href="{% url 'Users:register' %}">Register here</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

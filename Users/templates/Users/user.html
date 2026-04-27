@@ -1,0 +1,45 @@
+{% extends "Routes/layout.html" %}
+
+{% block title %} — My Profile{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <!-- ── Profile card ──────────────────────── -->
+  <div class="profile-card">
+    <div class="profile-avatar">
+      {{ request.user.username|slice:":2"|upper }}
+    </div>
+    <div>
+      <div class="profile-name">{{ request.user.username }}</div>
+      <div class="profile-email">{{ request.user.email }}</div>
+    </div>
+  </div>
+
+  <!-- ── Booked routes ──────────────────────── -->
+  <div class="section-label">My booked routes</div>
+
+  <div class="route-list">
+    {% for route in booked_routes %}
+    <a href="{% url 'Routes:Route_details' route.id %}" class="route-card">
+      <div class="route-card-left">
+        <div class="route-tag">Route {{ route.id|stringformat:"03d" }}</div>
+        <div class="route-cities">
+          {{ route.origin }}
+          <span class="route-arrow">&#8594;</span>
+          {{ route.destination }}
+        </div>
+        <div class="route-meta">{{ route.duration }} min</div>
+      </div>
+      <span class="pill booked">Booked</span>
+    </a>
+    {% empty %}
+    <p style="color:var(--muted); font-size:14px;">
+      You haven't booked any routes yet.
+      <a href="{% url 'Routes:index' %}">Browse routes</a>
+    </p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

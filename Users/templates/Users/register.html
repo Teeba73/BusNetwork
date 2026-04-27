@@ -1,0 +1,70 @@
+{% extends "Routes/layout.html" %}
+
+{% block title %} — Register{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="auth-wrap">
+
+    <div class="auth-title">Join BusNet.</div>
+    <div class="auth-sub">Create an account to start booking routes.</div>
+
+    {% if message %}
+    <div class="msg msg-error">{{ message }}</div>
+    {% endif %}
+
+    <form method="post" action="{% url 'Users:register' %}" id="reg-form">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="your_username" required autocomplete="username">
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required
+          autocomplete="new-password">
+      </div>
+
+      <div class="field">
+        <label for="confirmation">Confirm password</label>
+        <input type="password" id="confirmation" name="confirmation" placeholder="••••••••" required
+          autocomplete="new-password">
+      </div>
+
+      <!-- Client-side mismatch message (hidden by default) -->
+      <div class="msg msg-error" id="pw-error" style="display:none;">
+        Passwords don't match — please try again.
+      </div>
+
+      <button type="submit" class="btn-primary">Create account</button>
+    </form>
+
+    <div class="auth-switch">
+      Already registered? <a href="{% url 'Users:login' %}">Sign in</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.getElementById('reg-form').addEventListener('submit', function (e) {
+    const pw = document.getElementById('password').value;
+    const cpw = document.getElementById('confirmation').value;
+    const err = document.getElementById('pw-error');
+    if (pw !== cpw) {
+      e.preventDefault();
+      err.style.display = 'block';
+      document.getElementById('confirmation').focus();
+    } else {
+      err.style.display = 'none';
+    }
+  });
+</script>
+{% endblock %}

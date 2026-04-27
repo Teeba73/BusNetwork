@@ -1,0 +1,86 @@
+{% extends "Routes/layout.html" %}
+
+{% block title %} — {{ station.city }} Station{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <a href="{% url 'Routes:index' %}" class="back-link">&#8592; Back to routes</a>
+
+  <!-- Hero -->
+  <div class="detail-hero">
+    <div class="detail-route-no">Station &nbsp;&middot;&nbsp; BusNet</div>
+    <div class="detail-cities">
+      {{ station.city }}<br>
+      <span class="dest">{{ station.name }}</span>
+    </div>
+    <div class="detail-stats">
+      <div class="detail-stat">
+        &#128652; <strong>{{ departures.count }}</strong> departure{{ departures.count|pluralize }}
+      </div>
+      <div class="detail-stat">
+        &#127937; <strong>{{ arrivals.count }}</strong> arrival{{ arrivals.count|pluralize }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Departures -->
+  <div class="section-label">Departing from this station</div>
+  <div class="route-list" style="margin-bottom: 28px;">
+    {% for route in departures %}
+    <a href="{% url 'Routes:Route_details' route.id %}" class="route-card">
+      <div class="route-card-left">
+        <div class="route-tag">Route {{ route.id|stringformat:"03d" }}</div>
+        <div class="route-cities">
+          {{ route.origin }}
+          <span class="route-arrow">&#8594;</span>
+          {{ route.destination }}
+        </div>
+        <div class="route-meta">
+          {{ route.duration }} min
+          &nbsp;&middot;&nbsp;
+          {{ route.passengers.count }} passenger{{ route.passengers.count|pluralize }}
+        </div>
+      </div>
+      {% if request.user in route.passengers.all %}
+      <span class="pill booked">Booked</span>
+      {% else %}
+      <span class="pill">Available</span>
+      {% endif %}
+    </a>
+    {% empty %}
+    <p style="color:var(--muted); font-size:14px;">No routes depart from this station.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Arrivals -->
+  <div class="section-label">Arriving at this station</div>
+  <div class="route-list">
+    {% for route in arrivals %}
+    <a href="{% url 'Routes:Route_details' route.id %}" class="route-card">
+      <div class="route-card-left">
+        <div class="route-tag">Route {{ route.id|stringformat:"03d" }}</div>
+        <div class="route-cities">
+          {{ route.origin }}
+          <span class="route-arrow">&#8594;</span>
+          {{ route.destination }}
+        </div>
+        <div class="route-meta">
+          {{ route.duration }} min
+          &nbsp;&middot;&nbsp;
+          {{ route.passengers.count }} passenger{{ route.passengers.count|pluralize }}
+        </div>
+      </div>
+      {% if request.user in route.passengers.all %}
+      <span class="pill booked">Booked</span>
+      {% else %}
+      <span class="pill">Available</span>
+      {% endif %}
+    </a>
+    {% empty %}
+    <p style="color:var(--muted); font-size:14px;">No routes arrive at this station.</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

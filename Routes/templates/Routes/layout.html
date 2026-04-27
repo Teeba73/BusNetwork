@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BusNet{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+  <!-- ── Top Navigation ───────────────────────── -->
+  <header class="topbar">
+    <a href="{% url 'Routes:index' %}" class="brand">Bus<b>Net</b></a>
+
+    <nav class="nav-right">
+      {% if request.user.is_authenticated %}
+      <div class="nav-avatar">
+        {{ request.user.username|slice:":2"|upper }}
+      </div>
+      <span class="nav-name">{{ request.user.username }}</span>
+
+      <a href="{% url 'Users:index' %}" class="btn-ghost">Profile</a>
+
+      <form method="post" action="{% url 'Users:logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="btn-ghost">Log out</button>
+      </form>
+
+      {% else %}
+      <a href="{% url 'Users:login' %}" class="btn-ghost">Sign in</a>
+      <a href="{% url 'Users:register' %}" class="btn-ghost"
+        style="border-color:var(--amber);color:var(--amber);">Register</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- ── Page content ─────────────────────────── -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+
+</html>

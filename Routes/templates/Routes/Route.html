@@ -1,0 +1,71 @@
+{% extends "Routes/layout.html" %}
+
+{% block title %} — {{ route.origin }} to {{ route.destination }}{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <a href="{% url 'Routes:index' %}" class="back-link">&#8592; Back to routes</a>
+
+
+  <!-- ── Hero card ─────────────────────────── -->
+  <div class="detail-hero">
+    <div class="detail-route-no">Route {{ route.id|stringformat:"03d" }} &nbsp;&middot;&nbsp; BusNet</div>
+    <div class="detail-cities">
+      {{ route.origin }}<br>
+      <span class="dest">{{ route.destination }}</span>
+    </div>
+    <div class="detail-stats">
+      <div class="detail-stat">
+        &#9201; <strong>{{ route.duration }} min</strong>
+      </div>
+      <div class="detail-stat">
+        &#128101; <strong>{{ route.passengers.count }}</strong>
+        passenger{{ route.passengers.count|pluralize }}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Passenger list ────────────────────── -->
+  <div class="section-label">Passengers on this bus</div>
+
+  {% if route.passengers.all %}
+  <div class="passenger-list">
+    {% for passenger in route.passengers.all %}
+    <div class="passenger-row">
+      <div class="passenger-avatar">
+        {{ passenger.username|slice:":2"|upper }}
+      </div>
+      {{ passenger.username }}
+      {% if passenger == request.user %}
+      <span class="you-badge">You</span>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No passengers yet — be the first to book!</div>
+  {% endif %}
+
+  <!-- ── Booking action ────────────────────── -->
+  {% if request.user.is_authenticated %}
+  {% if request.user in route.passengers.all %}
+  <form method="post" action="{% url 'Routes:Unbook' route.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-unbook">Cancel my booking</button>
+  </form>
+  {% else %}
+  <form method="post" action="{% url 'Routes:Book' route.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-book">Book a seat</button>
+  </form>
+  {% endif %}
+  {% else %}
+  <a href="{% url 'Users:login' %}" class="btn-book"
+    style="display:block;text-align:center;text-decoration:none;padding:13px;">
+    Sign in to book
+  </a>
+  {% endif %}
+
+</div>
+{% endblock %}

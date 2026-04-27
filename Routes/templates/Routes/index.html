@@ -1,0 +1,51 @@
+{% extends "Routes/layout.html" %}
+
+{% block title %} — Routes{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <div class="eyebrow">Available departures</div>
+  <h1 class="page-title">Where are you<br>headed today?</h1>
+
+  <form method="GET">
+    <div class="search-row">
+      <input type="text" name="origin" class="search-input" placeholder="Search origin city or station…"
+        value="{{ request.GET.origin }}">
+      <input type="text" name="destination" class="search-input" placeholder="Search destination city or station…"
+        value="{{ request.GET.destination }}">
+      <button type="submit" class="btn-submit">Search</button>
+    </div>
+  </form>
+
+  <div class="route-list">
+    {% for route in routes %}
+    <a href="{% url 'Routes:Route_details' route.id %}" class="route-card">
+      <div class="route-card-left">
+        <div class="route-tag">Route {{ route.id|stringformat:"03d" }}</div>
+        <div class="route-cities">
+          {{ route.origin }}
+          <span class="route-arrow">&#8594;</span>
+          {{ route.destination }}
+        </div>
+        <div class="route-meta">
+          {{ route.duration }} min
+          &nbsp;&middot;&nbsp;
+          {{ route.passengers.count }}
+          passenger{{ route.passengers.count|pluralize }}
+        </div>
+      </div>
+
+      {% if request.user in route.passengers.all %}
+      <span class="pill booked">Booked</span>
+      {% else %}
+      <span class="pill">Available</span>
+      {% endif %}
+    </a>
+    {% empty %}
+    <p style="color:var(--muted); font-size:14px;">No routes available at the moment.</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
