@@ -50,28 +50,5 @@ The app is styled with Bootstrap, providing a clean, responsive, and professiona
 
 ---
 
-## Setup & Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/Teeba73/BusNetwork.git
-cd BusNetwork
-
-# Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run migrations
-python manage.py migrate
-
-# Start the development server
-python manage.py runserver
-```
-
-Then open your browser at `http://127.0.0.1:8000`
-
----
 
